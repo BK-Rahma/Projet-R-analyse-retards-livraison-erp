@@ -1,0 +1,28 @@
+---
+title: " Statistics with R project-- Template"
+subtitle: "material"
+---
+
+## Introduction
+
+This website contains a collection of template for introductory statistics 
+courses with **R**. The aim is to provide insight in fundamental principles and 
+a broad overview and to enable students to select and understand specific books 
+and online material to dig in deeper in the diverse and fascinating field of statistics.
+
+The corresponding slides are found at 
+
+## Status
+
+In progress
+
+
+## Related Pages
+
+* [**Lecture slides**](../elements/)
+* [**Datasets**](../datasets/)
+* [Source code of the exercises](https://github.com/tpetzoldt/element-labs)
+
+## Author
+
+Abdallah Khemais

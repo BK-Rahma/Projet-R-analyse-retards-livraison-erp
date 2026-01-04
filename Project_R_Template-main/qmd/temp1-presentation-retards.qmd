@@ -1,0 +1,597 @@
+---
+title: "Analyse des Retards de Livraison - Présentation"
+date: '2025-01-20'
+format: 
+  revealjs:
+    scrollable: true
+    theme: default
+    transition: slide
+webr:
+  packages: ['tidyverse', 'ggplot2', 'dplyr', 'lubridate', 'tidyr']
+filters:
+  - webr
+css: styles.css
+---
+
+## Introduction
+
+Cette analyse vise à étudier les retards de livraison dans un système ERP à partir des dates prévues et réelles.
+
+**Objectifs :**
+
+* Identifier les retards de livraison et quantifier leur ampleur
+* Calculer des indicateurs de performance
+* Analyser les retards par client, produit et site
+* Détecter les tendances temporelles
+
+---
+
+## Importation des données
+
+```{webr-r}
+# Importation du fichier CSV depuis GitHub
+colis_df <- read.csv(
+  "https://raw.githubusercontent.com/BK-Rahma/Projet-R-analyse-retards-livraison-erp/main/Colisageautomatique.csv",
+  sep = ";",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fill = TRUE,
+  quote = ""
+)
+
+cat("Nombre de lignes:", nrow(colis_df), "\n")
+cat("Nombre de colonnes:", ncol(colis_df), "\n")
+cat("\nAperçu des premières lignes:\n")
+head(colis_df, 3)
+```
+
+---
+
+## Nettoyage des données
+
+**Étapes de nettoyage :**
+
+1. Suppression des colonnes entièrement vides
+2. Suppression des doublons
+3. Conversion des dates
+
+```{webr-r}
+# Supprimer les colonnes entièrement vides
+cols_all_na <- sapply(colis_df, function(x) all(is.na(x) | x == ""))
+colis_df_clean <- colis_df[, !cols_all_na]
+
+# Supprimer les doublons
+colis_df_clean <- unique(colis_df_clean)
+
+cat("Colonnes supprimées:", sum(cols_all_na), "\n")
+cat("Doublons supprimés:", nrow(colis_df) - nrow(colis_df_clean), "\n")
+cat("Lignes restantes:", nrow(colis_df_clean), "\n")
+```
+
+---
+
+## Conversion des dates
+
+```{webr-r}
+# Fonction de conversion en date
+convert_to_date <- function(df, colname) {
+  if (colname %in% names(df)) {
+    df[[colname]] <- as.Date(df[[colname]], format = "%d/%m/%Y")
+  }
+  return(df)
+}
+
+# Colonnes de dates à convertir
+cols_dates <- c(
+  "date_introduction",
+  "date_livraison",
+  "chd..date.prévue.",
+  "cdd..date.réelle."
+)
+
+for (cn in cols_dates) {
+  colis_df_clean <- convert_to_date(colis_df_clean, cn)
+}
+
+cat("Conversion des dates terminée\n")
+cat("Types des colonnes de dates:\n")
+str(colis_df_clean[, cols_dates[cols_dates %in% names(colis_df_clean)]])
+```
+
+---
+
+## Calcul du retard en jours
+
+Le retard est calculé comme la différence entre la date réelle (CDD) et la date prévue (CHD).
+
+```{webr-r}
+# Calcul du retard
+if ("chd..date.prévue." %in% names(colis_df_clean) & "cdd..date.réelle." %in% names(colis_df_clean)) {
+  colis_df_clean$retard <- as.numeric(colis_df_clean$cdd..date.réelle. - colis_df_clean$chd..date.prévue.)
+  colis_df_clean$est_en_retard <- ifelse(!is.na(colis_df_clean$retard) & colis_df_clean$retard > 0, TRUE, FALSE)
+  
+  cat("Statistiques du retard:\n")
+  cat("Moyenne:", round(mean(colis_df_clean$retard, na.rm = TRUE), 2), "jours\n")
+  cat("Médiane:", round(median(colis_df_clean$retard, na.rm = TRUE), 2), "jours\n")
+  cat("Nombre en retard:", sum(colis_df_clean$est_en_retard, na.rm = TRUE), "\n")
+  cat("Taux de retard:", round(100 * mean(colis_df_clean$est_en_retard, na.rm = TRUE), 1), "%\n")
+} else {
+  cat("Colonnes de dates non trouvées\n")
+  print(names(colis_df_clean))
+}
+```
+
+---
+
+## Catégorisation des retards
+
+```{webr-r}
+# Catégorisation
+categoriser_retard <- function(jours) {
+  if (is.na(jours)) {
+    return(NA_character_)
+  } else if (jours <= 0) {
+    return("Pas de retard")
+  } else if (jours <= 3) {
+    return("Léger")
+  } else if (jours <= 7) {
+    return("Moyen")
+  } else {
+    return("Important")
+  }
+}
+
+colis_df_clean$type_retard <- vapply(colis_df_clean$retard, categoriser_retard, character(1))
+
+cat("Répartition par type de retard:\n")
+table(colis_df_clean$type_retard, useNA = "ifany")
+```
+
+---
+
+## Visualisation : Répartition des retards
+
+```{webr-r}
+library(ggplot2)
+
+p1 <- ggplot(colis_df_clean, aes(x = est_en_retard)) +
+  geom_bar(fill = "#66c2a5") +
+  scale_x_discrete(labels = c("FALSE" = "Non", "TRUE" = "Oui")) +
+  labs(
+    title = "Répartition des retards",
+    x = "Est en retard",
+    y = "Nombre de commandes"
+  ) +
+  theme_minimal()
+
+print(p1)
+```
+
+---
+
+## Système d'alertes logistiques
+
+```{webr-r}
+# Date du jour
+aujourdhui <- Sys.Date()
+
+# Alerte détaillée
+detecter_alerte <- function(date_prevue, date_reelle, today) {
+  if (!is.na(date_reelle)) {
+    if (date_reelle > date_prevue) {
+      return("Retard confirmé")
+    } else {
+      return("Livré à temps")
+    }
+  } else {
+    if (date_prevue < today) {
+      return("En retard non livré")
+    } else {
+      return("Livraison prévue")
+    }
+  }
+}
+
+colis_df_clean$alerte_retard <- mapply(
+  detecter_alerte,
+  colis_df_clean$chd..date.prévue.,
+  colis_df_clean$cdd..date.réelle.,
+  MoreArgs = list(today = aujourdhui)
+)
+
+cat("Répartition par type d'alerte:\n")
+table(colis_df_clean$alerte_retard, useNA = "ifany")
+```
+
+---
+
+## Visualisation : Statut des livraisons
+
+```{webr-r}
+p3 <- ggplot(colis_df_clean, aes(x = alerte_retard)) +
+  geom_bar(fill = "#fc8d62") +
+  labs(
+    title = "Statut des livraisons",
+    x = "Alerte",
+    y = "Nombre de commandes"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+
+print(p3)
+```
+
+---
+
+## Analyses globales : Délais moyens
+
+```{webr-r}
+library(dplyr)
+
+# Conversion de date_creation_commande si nécessaire
+if ("date_creation_commande" %in% names(colis_df_clean)) {
+  if (!inherits(colis_df_clean$date_creation_commande, "Date")) {
+    colis_df_clean$date_creation_commande <- as.Date(colis_df_clean$date_creation_commande, format = "%d/%m/%Y")
+  }
+  
+  # Calcul des délais
+  colis_df_clean <- colis_df_clean %>%
+    mutate(
+      delai_creation_chd = as.numeric(chd..date.prévue. - date_creation_commande),
+      delai_creation_cdd = as.numeric(cdd..date.réelle. - date_creation_commande)
+    )
+  
+  # Délais moyens
+  res_delais <- colis_df_clean %>%
+    summarise(
+      delai_moyen_creation_chd = mean(delai_creation_chd, na.rm = TRUE),
+      delai_moyen_creation_cdd = mean(delai_creation_cdd, na.rm = TRUE)
+    )
+  
+  cat("Délai moyen création → date prévue:", round(res_delais$delai_moyen_creation_chd, 1), "jours\n")
+  cat("Délai moyen création → date réelle:", round(res_delais$delai_moyen_creation_cdd, 1), "jours\n")
+}
+```
+
+---
+
+## Taux de respect des délais
+
+```{webr-r}
+# Calcul du taux de respect
+colis_df_clean <- colis_df_clean %>%
+  mutate(
+    en_retard = case_when(
+      !is.na(cdd..date.réelle.) & !is.na(chd..date.prévue.) & cdd..date.réelle. > chd..date.prévue. ~ "En retard",
+      !is.na(cdd..date.réelle.) & !is.na(chd..date.prévue.) & cdd..date.réelle. <= chd..date.prévue. ~ "À l'heure",
+      TRUE ~ "Non livré / Inconnu"
+    )
+  )
+
+taux_respect <- colis_df_clean %>%
+  count(en_retard) %>%
+  mutate(pourcentage = round(100 * n / sum(n), 1))
+
+print(taux_respect)
+```
+
+---
+
+## Histogramme des retards/avances
+
+```{webr-r}
+colis_df_clean <- colis_df_clean %>%
+  mutate(delta_jours = as.numeric(cdd..date.réelle. - chd..date.prévue.))
+
+p_hist <- ggplot(colis_df_clean, aes(x = delta_jours)) +
+  geom_histogram(binwidth = 1, fill = "#1f78b4", color = "white") +
+  labs(
+    title = "Histogramme du retard / avance (en jours)",
+    x = "Retard (+) / Avance (-) en jours",
+    y = "Nombre de commandes"
+  ) +
+  theme_minimal()
+
+print(p_hist)
+```
+
+---
+
+## Boxplot du retard
+
+```{webr-r}
+# Boxplot du retard (très important en statistique)
+p_boxplot <- ggplot(colis_df_clean, aes(y = delta_jours)) +
+  geom_boxplot(fill = "#80b1d3") +
+  labs(
+    title = "Distribution du retard (boxplot)",
+    y = "Retard / avance (jours)"
+  ) +
+  theme_minimal()
+
+print(p_boxplot)
+```
+
+**Interprétation :** Le boxplot révèle la distribution statistique des retards. La boîte centrale (IQR) contient 50% des données, la médiane indique le retard typique, et les points extrêmes identifient les valeurs aberrantes nécessitant une attention.
+
+---
+
+## Analyse par client
+
+```{webr-r}
+if ("client" %in% names(colis_df_clean)) {
+  retard_client <- colis_df_clean %>%
+    group_by(client) %>%
+    summarise(
+      delai_moyen = mean(delta_jours, na.rm = TRUE),
+      taux_retard = mean(en_retard == "En retard", na.rm = TRUE),
+      nb_commandes = n()
+    ) %>%
+    arrange(desc(nb_commandes))
+  
+  cat("Top 5 clients par nombre de commandes:\n")
+  print(head(retard_client, 5))
+  
+  # Graphique pour les clients avec plus de 10 commandes
+  if (nrow(retard_client %>% filter(nb_commandes > 10)) > 0) {
+    p_client <- ggplot(retard_client %>% filter(nb_commandes > 10), 
+                       aes(x = reorder(client, delai_moyen), y = delai_moyen)) +
+      geom_col(fill = "#33a02c") +
+      coord_flip() +
+      labs(
+        title = "Délai moyen (retard/avance) par client",
+        x = "Client",
+        y = "Délai moyen en jours"
+      ) +
+      theme_minimal()
+    
+    print(p_client)
+  }
+}
+```
+
+---
+
+## Analyse par produit
+
+```{webr-r}
+if ("produit_id" %in% names(colis_df_clean)) {
+  retard_produit <- colis_df_clean %>%
+    group_by(produit_id) %>%
+    summarise(
+      delai_moyen = mean(delta_jours, na.rm = TRUE),
+      taux_retard = mean(en_retard == "En retard", na.rm = TRUE),
+      nb_commandes = n()
+    ) %>%
+    arrange(desc(nb_commandes))
+  
+  cat("Top 5 produits par nombre de commandes:\n")
+  print(head(retard_produit, 5))
+  
+  # Graphique pour les produits avec plus de 20 commandes
+  if (nrow(retard_produit %>% filter(nb_commandes > 20)) > 0) {
+    p_produit <- ggplot(retard_produit %>% filter(nb_commandes > 20), 
+                        aes(x = reorder(as.factor(produit_id), delai_moyen), y = delai_moyen)) +
+      geom_col(fill = "#fb9a99") +
+      coord_flip() +
+      labs(
+        title = "Délai moyen (retard/avance) par produit",
+        x = "Produit",
+        y = "Délai moyen en jours"
+      ) +
+      theme_minimal()
+    
+    print(p_produit)
+  }
+}
+```
+
+---
+
+## Analyse par site
+
+```{webr-r}
+if ("site_id" %in% names(colis_df_clean)) {
+  retard_site <- colis_df_clean %>%
+    group_by(site_id) %>%
+    summarise(
+      delai_moyen = mean(delta_jours, na.rm = TRUE),
+      taux_retard = mean(en_retard == "En retard", na.rm = TRUE),
+      nb_commandes = n()
+    ) %>%
+    arrange(desc(nb_commandes))
+  
+  cat("Top 5 sites par nombre de commandes:\n")
+  print(head(retard_site, 5))
+  
+  # Graphique pour les sites avec plus de 20 commandes
+  if (nrow(retard_site %>% filter(nb_commandes > 20)) > 0) {
+    p_site <- ggplot(retard_site %>% filter(nb_commandes > 20), 
+                     aes(x = reorder(as.factor(site_id), delai_moyen), y = delai_moyen)) +
+      geom_col(fill = "#e31a1c") +
+      coord_flip() +
+      labs(
+        title = "Délai moyen (retard/avance) par site",
+        x = "Site",
+        y = "Délai moyen en jours"
+      ) +
+      theme_minimal()
+    
+    print(p_site)
+  }
+}
+```
+
+---
+
+## Heatmap Client × Site
+
+```{webr-r}
+library(tidyr)
+
+if ("client" %in% names(colis_df_clean) && "site_id" %in% names(colis_df_clean)) {
+  heat_data <- colis_df_clean %>%
+    group_by(client, site_id) %>%
+    summarise(retard_moyen = mean(delta_jours, na.rm = TRUE), .groups = "drop") %>%
+    drop_na()
+  
+  if (nrow(heat_data) > 0) {
+    p_heatmap <- ggplot(heat_data, aes(x = client, y = as.factor(site_id), fill = retard_moyen)) +
+      geom_tile() +
+      scale_fill_gradient2(low = "green", mid = "white", high = "red", midpoint = 0) +
+      labs(
+        title = "Heatmap du retard moyen par client et site",
+        x = "Client",
+        y = "Site",
+        fill = "Retard moyen\n(jours)"
+      ) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
+    print(p_heatmap)
+  }
+}
+```
+
+**Interprétation :** La heatmap identifie les combinaisons problématiques client-site. Les zones rouges indiquent des retards importants nécessitant une intervention prioritaire, tandis que les zones vertes montrent de bonnes performances.
+
+---
+
+## Analyse temporelle : Par mois
+
+```{webr-r}
+library(lubridate)
+
+# Création de la colonne mois
+ref_date_col <- if ("chd..date.prévue." %in% names(colis_df_clean)) "chd..date.prévue." else "date_creation_commande"
+
+if (ref_date_col %in% names(colis_df_clean)) {
+  colis_df_clean <- colis_df_clean %>%
+    mutate(
+      mois = month(.data[[ref_date_col]]),
+      annee = year(.data[[ref_date_col]])
+    )
+  
+  # Regrouper par mois et alerte_retard
+  if ("alerte_retard" %in% names(colis_df_clean)) {
+    retard_mois <- colis_df_clean %>%
+      filter(!is.na(mois), !is.na(alerte_retard)) %>%
+      group_by(mois, alerte_retard) %>%
+      summarise(n = n(), .groups = "drop") %>%
+      group_by(mois) %>%
+      mutate(pourcentage = 100 * n / sum(n)) %>%
+      ungroup()
+    
+    cat("Répartition par mois (échantillon):\n")
+    print(head(retard_mois, 10))
+  }
+}
+```
+
+---
+
+## Visualisation temporelle : Par mois
+
+```{webr-r}
+if (exists("retard_mois") && nrow(retard_mois) > 0) {
+  # Graphique en valeurs absolues
+  plot_hist_counts <- ggplot(retard_mois, aes(x = factor(mois), y = n, fill = alerte_retard)) +
+    geom_col(position = "stack") +
+    labs(
+      title = "Nombre de commandes par mois",
+      x = "Mois",
+      y = "Nombre de commandes",
+      fill = "Statut"
+    ) +
+    theme_minimal()
+  
+  print(plot_hist_counts)
+}
+```
+
+---
+
+## Visualisation temporelle : Pourcentages
+
+```{webr-r}
+if (exists("retard_mois") && nrow(retard_mois) > 0) {
+  # Graphique en pourcentage
+  plot_hist_percent <- ggplot(retard_mois, aes(x = factor(mois), y = pourcentage, fill = alerte_retard)) +
+    geom_col(position = "fill") +
+    scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+    labs(
+      title = "Répartition en % par mois",
+      x = "Mois",
+      y = "Pourcentage",
+      fill = "Statut"
+    ) +
+    theme_minimal()
+  
+  print(plot_hist_percent)
+}
+```
+
+---
+
+## Évolution temporelle des retards
+
+```{webr-r}
+# Évolution temporelle des retards
+if ("chd..date.prévue." %in% names(colis_df_clean)) {
+  retard_par_mois <- colis_df_clean %>%
+    mutate(mois = format(chd..date.prévue., "%Y-%m")) %>%
+    group_by(mois) %>%
+    summarise(retard_moyen = mean(delta_jours, na.rm = TRUE), .groups = "drop")
+  
+  p_evolution <- ggplot(retard_par_mois, aes(x = mois, y = retard_moyen, group = 1)) +
+    geom_line(color = "#1f78b4", size = 1) +
+    geom_point(color = "#1f78b4", size = 2) +
+    labs(
+      title = "Évolution mensuelle du retard moyen",
+      x = "Mois",
+      y = "Retard moyen (jours)"
+    ) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  print(p_evolution)
+}
+```
+
+**Interprétation :** L'évolution mensuelle montre les tendances temporelles. Une courbe ascendante indique une dégradation, une courbe descendante une amélioration. Les pics identifient les périodes critiques à analyser.
+
+---
+
+## Résultats principaux
+
+**Indicateurs clés identifiés :**
+
+* Taux global de respect des délais
+* Délais moyens par dimension (client, produit, site)
+* Tendances temporelles dans les retards
+* Catégorisation des retards (léger, moyen, important)
+
+**Implications pour la gestion :**
+
+* Identification des sources principales de dysfonctionnement
+* Priorisation des actions correctives
+* Surveillance de l'évolution des retards
+* Mise en place d'alertes préventives
+
+---
+
+## Conclusion
+
+Cette analyse permet de :
+
+✅ **Quantifier** les retards de livraison  
+✅ **Identifier** les problèmes par dimension  
+✅ **Suivre** l'évolution temporelle  
+✅ **Alerter** sur les situations critiques  
+
+**Prochaines étapes :**
+
+* Actions correctives ciblées
+* Modèles prédictifs
+* Intégration avec d'autres systèmes
+

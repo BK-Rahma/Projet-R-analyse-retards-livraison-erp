@@ -1,0 +1,154 @@
+---
+title: "01-Discharge of River Elbe: Data Management with LibreOffice"
+date: "2025-11-16"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["readxl", "dplyr"] # ajoute d'autres packages si nécessaire
+
+filters:
+  - webr
+---
+
+
+## Introduction
+
+```{mermaid}
+flowchart TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    
+```
+Planning and maintenance of waterways and rivers needs adequate measurements and data.
+Raw time series can often be long and confusing, so a first step is aggregation and visualization.
+
+**Scientific aim:** plot an average year and calculate monthly averages, minima and maxima of the discharge.
+
+---
+
+## Methods
+
+The approach demonstrates the use of pivot tables for aggregating data according to certain criteria.
+We will also use date and time computation to derive aggregation criteria from a single date column.
+
+The data set consists of daily measurements for discharge of the Elbe River in Dresden (daily discharge sum in $\mathrm{m^3 d^{-1}}$).
+
+Data were kindly provided by the German Federal Institute for Hydrology (BfG).
+
+---
+
+## Exercises
+
+### 1. Download the data and inspect it
+
+```{webr-r}
+# Example code if CSV is used instead of ODS
+url <- "https://tpetzoldt.github.io/datasets/data/elbe-1806.csv"
+elbe <- read.csv(url)
+
+head(elbe)
+```
+
+---
+
+### 2. Create date categories
+
+```{webr-r}
+
+library(dplyr)
+elbe <- elbe %>% 
+  rename(Date = date)
+elbe$year <- as.numeric(format(as.Date(elbe$Date), "%Y"))
+elbe$month <- as.numeric(format(as.Date(elbe$Date), "%m"))
+elbe$day <- as.numeric(format(as.Date(elbe$Date), "%d"))
+elbe$weekday <- as.numeric(format(as.Date(elbe$Date), "%u"))
+elbe$doy <- as.numeric(format(as.Date(elbe$Date), "%j"))
+
+head(elbe)
+```
+
+---
+
+### 3. Aggregate data
+
+```{webr-r}
+library(dplyr)
+
+# Monthly averages
+monthly_avg <- elbe %>%
+  group_by(year, month) %>%
+  summarise(mean_discharge = mean(discharge, na.rm=TRUE),
+            min_discharge = min(discharge, na.rm=TRUE),
+            max_discharge = max(discharge, na.rm=TRUE),.groups ="drop")
+
+head(monthly_avg)
+```
+
+---
+
+### 4. Average year plot
+
+```{webr-r}
+library(ggplot2)
+
+avg_year <- elbe %>%
+  group_by(doy) %>%
+  summarise(mean_discharge = mean(discharge, na.rm=TRUE),
+            min_discharge = min(discharge, na.rm=TRUE),
+            max_discharge = max(discharge, na.rm=TRUE))
+
+ggplot(avg_year, aes(x=doy)) +
+  geom_line(aes(y=mean_discharge), color="blue", linewidth=1) +
+  geom_ribbon(aes(ymin=min_discharge, ymax=max_discharge), alpha=0.2)
+```
+
+---
+
+### 5. Annual discharge sum
+
+```{webr-r}
+annual_sum <- elbe %>%
+  group_by(year) %>%
+  summarise(total_discharge = sum(discharge, na.rm=TRUE))
+
+ggplot(annual_sum, aes(x=year, y=total_discharge)) +
+  geom_col(fill="steelblue") +
+  labs(y="Annual discharge", x="Year")
+```
+
+---
+
+### 6. Additional explorations
+
+```{webr-r}
+# Scatter plot per year
+ggplot(elbe, aes(x=doy, y=discharge, color=factor(year))) +
+  geom_point() +
+  geom_smooth(aes(group=1), method="loess", color="black", size=1.2) +
+  labs(color="Year")
+```
+
+---
+
+### 7. Cumulative sum per year (optional)
+
+```{webr-r}
+cumsum_elbe <- elbe %>%
+  group_by(year) %>%
+  mutate(cum_discharge = cumsum(discharge))
+
+ggplot(cumsum_elbe, aes(x=doy, y=cum_discharge, color=factor(year))) +
+  geom_line() +
+  labs(color="Year", y="Cumulative discharge")
+```
+
+---
+

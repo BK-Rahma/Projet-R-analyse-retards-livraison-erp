@@ -1,0 +1,888 @@
+{
+    "sources": [
+        {
+            "author": [
+                {
+                    "dropping-particle": "für",
+                    "family": "Gewässerkunde",
+                    "given": "Bundesanstalt"
+                }
+            ],
+            "id": "BfG2020",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "note": "Data Source: Federal Waterways and Shipping Administration (WSV), provided by the Federal Institute for Hydrology (BfG). This applies to first, second and any subsequent use.",
+            "publisher-place": "Koblenz",
+            "title": "Discharge of the elbe river, gauge dresden in m3/s",
+            "type": ""
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "RCore",
+            "issued": {
+                "date-parts": [
+                    [
+                        2024
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "URL": "http://www.rstudio.com/",
+            "author": [
+                {
+                    "literal": "RStudio Team"
+                }
+            ],
+            "id": "RStudio",
+            "issued": {
+                "date-parts": [
+                    [
+                        2020
+                    ]
+                ]
+            },
+            "publisher": "RStudio, PBC.",
+            "publisher-place": "Boston, MA",
+            "title": "RStudio: Integrated development environment for r",
+            "title-short": "RStudio",
+            "type": "book"
+        },
+        {
+            "DOI": "10.21105/joss.01686",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Averick",
+                    "given": "Mara"
+                },
+                {
+                    "family": "Bryan",
+                    "given": "Jennifer"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Winston"
+                },
+                {
+                    "family": "McGowan",
+                    "given": "Lucy D’Agostino"
+                },
+                {
+                    "family": "François",
+                    "given": "Romain"
+                },
+                {
+                    "family": "Grolemund",
+                    "given": "Garrett"
+                },
+                {
+                    "family": "Hayes",
+                    "given": "Alex"
+                },
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Hester",
+                    "given": "Jim"
+                },
+                {
+                    "family": "Kuhn",
+                    "given": "Max"
+                },
+                {
+                    "family": "Pedersen",
+                    "given": "Thomas Lin"
+                },
+                {
+                    "family": "Miller",
+                    "given": "Evan"
+                },
+                {
+                    "family": "Bache",
+                    "given": "Stephan Milton"
+                },
+                {
+                    "family": "Müller",
+                    "given": "Kirill"
+                },
+                {
+                    "family": "Ooms",
+                    "given": "Jeroen"
+                },
+                {
+                    "family": "Robinson",
+                    "given": "David"
+                },
+                {
+                    "family": "Seidel",
+                    "given": "Dana Paige"
+                },
+                {
+                    "family": "Spinu",
+                    "given": "Vitalie"
+                },
+                {
+                    "family": "Takahashi",
+                    "given": "Kohske"
+                },
+                {
+                    "family": "Vaughan",
+                    "given": "Davis"
+                },
+                {
+                    "family": "Wilke",
+                    "given": "Claus"
+                },
+                {
+                    "family": "Woo",
+                    "given": "Kara"
+                },
+                {
+                    "family": "Yutani",
+                    "given": "Hiroaki"
+                }
+            ],
+            "container-title": "Journal of Open Source Software",
+            "id": "tidyverse2019",
+            "issue": "43",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "page": "1686",
+            "title": "Welcome to the tidyverse",
+            "type": "article-journal",
+            "volume": "4"
+        },
+        {
+            "URL": "https://link.springer.com/book/10.1007%2F978-0-387-77318-6",
+            "author": [
+                {
+                    "family": "Kleiber",
+                    "given": "Christian"
+                },
+                {
+                    "family": "Zeileis",
+                    "given": "Achim"
+                }
+            ],
+            "id": "Kleiber2008",
+            "issued": {
+                "date-parts": [
+                    [
+                        2008
+                    ]
+                ]
+            },
+            "publisher": "Springer Verlag",
+            "title": "Applied Econometrics with R",
+            "type": "book"
+        },
+        {
+            "URL": "https://yihui.org/knitr/",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "edition": "2nd",
+            "id": "knitr",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015
+                    ]
+                ]
+            },
+            "note": "ISBN 978-1498716963",
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton, Florida",
+            "title": "Dynamic documents with R and knitr",
+            "type": "book"
+        },
+        {
+            "DOI": "10.2307/2331554",
+            "author": [
+                {
+                    "family": "Student"
+                }
+            ],
+            "container-title": "Biometrika",
+            "id": "Student1908",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        1908
+                    ]
+                ]
+            },
+            "page": "1-25",
+            "publisher": "[Oxford University Press, Biometrika Trust]",
+            "title": "The probable error of a mean",
+            "type": "article-journal",
+            "volume": "6"
+        },
+        {
+            "DOI": "10.5334/irsp.82",
+            "author": [
+                {
+                    "family": "Delacre",
+                    "given": "M."
+                },
+                {
+                    "family": "Lakens",
+                    "given": "D."
+                },
+                {
+                    "family": "Leys",
+                    "given": "C."
+                }
+            ],
+            "container-title": "International Review of Social Psychology",
+            "id": "Delacre2017",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "page": "92-101",
+            "title": "Why psychologists should by default use Welch’s t-test instead of Student’s t-test",
+            "type": "article-journal",
+            "volume": "30"
+        },
+        {
+            "DOI": "10.1007/s12665-011-1289-0",
+            "author": [
+                {
+                    "family": "Ertel",
+                    "given": "A-M"
+                },
+                {
+                    "family": "Lupo",
+                    "given": "A"
+                },
+                {
+                    "family": "Scheifhacken",
+                    "given": "N"
+                },
+                {
+                    "family": "Bodnarchuk",
+                    "given": "T"
+                },
+                {
+                    "family": "Manturova",
+                    "given": "O"
+                },
+                {
+                    "family": "Berendonk",
+                    "given": "TU"
+                },
+                {
+                    "family": "Petzoldt",
+                    "given": "T"
+                }
+            ],
+            "container-title": "Environmental Earth Sciences",
+            "id": "Ertel2012",
+            "issued": {
+                "date-parts": [
+                    [
+                        2012
+                    ]
+                ]
+            },
+            "page": "1459-1473",
+            "title": "Heavy load and high potential: Anthropogenic pressures and their impacts on the water quality along a lowland river (western bug, ukraine)",
+            "title-short": "Heavy load and high potential",
+            "type": "article-journal",
+            "volume": "65"
+        },
+        {
+            "URL": "https://www.chebucto.ns.ca/science/SWCS/TPMODELS/OECD/OECD1982.pdf",
+            "author": [
+                {
+                    "family": "Vollenweider",
+                    "given": "R. A."
+                },
+                {
+                    "family": "Kerekes",
+                    "given": "J."
+                }
+            ],
+            "genre": "Synthesis Report",
+            "id": "Vollenweider1980",
+            "issued": {
+                "date-parts": [
+                    [
+                        1980
+                    ]
+                ]
+            },
+            "publisher": "Organisation for Economic Co-operation and Development",
+            "publisher-place": "Paris",
+            "title": "OECD cooperative programme for monitoring of inland waters. (Eutrophication control)",
+            "type": "report"
+        },
+        {
+            "ISBN": "978-3-319-24277-4",
+            "URL": "https://ggplot2.tidyverse.org",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                }
+            ],
+            "id": "Wickham2016",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "publisher": "Springer-Verlag New York",
+            "title": "ggplot2: Elegant graphics for data analysis",
+            "title-short": "ggplot2",
+            "type": "book"
+        },
+        {
+            "URL": "https://CRAN.R-project.org/package=dplyr",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "François",
+                    "given": "Romain"
+                },
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Müller",
+                    "given": "Kirill"
+                },
+                {
+                    "family": "Vaughan",
+                    "given": "Davis"
+                }
+            ],
+            "id": "Wickham2023",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "note": "R package version 1.1.4",
+            "title": "Dplyr: A grammar of data manipulation",
+            "title-short": "Dplyr",
+            "type": "book"
+        },
+        {
+            "DOI": "10.21105/joss.01686",
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                },
+                {
+                    "family": "Averick",
+                    "given": "Mara"
+                },
+                {
+                    "family": "Bryan",
+                    "given": "Jennifer"
+                },
+                {
+                    "family": "Chang",
+                    "given": "Winston"
+                },
+                {
+                    "family": "McGowan",
+                    "given": "Lucy D’Agostino"
+                },
+                {
+                    "family": "François",
+                    "given": "Romain"
+                },
+                {
+                    "family": "Grolemund",
+                    "given": "Garrett"
+                },
+                {
+                    "family": "Hayes",
+                    "given": "Alex"
+                },
+                {
+                    "family": "Henry",
+                    "given": "Lionel"
+                },
+                {
+                    "family": "Hester",
+                    "given": "Jim"
+                },
+                {
+                    "family": "Kuhn",
+                    "given": "Max"
+                },
+                {
+                    "family": "Pedersen",
+                    "given": "Thomas Lin"
+                },
+                {
+                    "family": "Miller",
+                    "given": "Evan"
+                },
+                {
+                    "family": "Bache",
+                    "given": "Stephan Milton"
+                },
+                {
+                    "family": "Müller",
+                    "given": "Kirill"
+                },
+                {
+                    "family": "Ooms",
+                    "given": "Jeroen"
+                },
+                {
+                    "family": "Robinson",
+                    "given": "David"
+                },
+                {
+                    "family": "Seidel",
+                    "given": "Dana Paige"
+                },
+                {
+                    "family": "Spinu",
+                    "given": "Vitalie"
+                },
+                {
+                    "family": "Takahashi",
+                    "given": "Kohske"
+                },
+                {
+                    "family": "Vaughan",
+                    "given": "Davis"
+                },
+                {
+                    "family": "Wilke",
+                    "given": "Claus"
+                },
+                {
+                    "family": "Woo",
+                    "given": "Kara"
+                },
+                {
+                    "family": "Yutani",
+                    "given": "Hiroaki"
+                }
+            ],
+            "container-title": "Journal of Open Source Software",
+            "id": "Wickham2019",
+            "issue": "43",
+            "issued": {
+                "date-parts": [
+                    [
+                        2019
+                    ]
+                ]
+            },
+            "page": "1686",
+            "title": "Welcome to the tidyverse",
+            "type": "article-journal",
+            "volume": "4"
+        },
+        {
+            "URL": "https://CRAN.R-project.org/package=gplots",
+            "author": [
+                {
+                    "family": "Warnes",
+                    "given": "Gregory R."
+                },
+                {
+                    "family": "Bolker",
+                    "given": "Ben"
+                },
+                {
+                    "family": "Bonebakker",
+                    "given": "Lodewijk"
+                },
+                {
+                    "family": "Gentleman",
+                    "given": "Robert"
+                },
+                {
+                    "family": "Huber",
+                    "given": "Wolfgang"
+                },
+                {
+                    "family": "Liaw",
+                    "given": "Andy"
+                },
+                {
+                    "family": "Lumley",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Maechler",
+                    "given": "Martin"
+                },
+                {
+                    "family": "Magnusson",
+                    "given": "Arni"
+                },
+                {
+                    "family": "Moeller",
+                    "given": "Steffen"
+                },
+                {
+                    "family": "Schwartz",
+                    "given": "Marc"
+                },
+                {
+                    "family": "Venables",
+                    "given": "Bill"
+                },
+                {
+                    "family": "Galili",
+                    "given": "Tal"
+                }
+            ],
+            "id": "Warnes2024",
+            "issued": {
+                "date-parts": [
+                    [
+                        2024
+                    ]
+                ]
+            },
+            "note": "R package version 3.2.0",
+            "title": "Gplots: Various r programming tools for plotting data",
+            "title-short": "Gplots",
+            "type": "book"
+        },
+        {
+            "DOI": "10.18637/jss.v007.i02",
+            "author": [
+                {
+                    "family": "Zeileis",
+                    "given": "Achim"
+                },
+                {
+                    "family": "Leisch",
+                    "given": "Friedrich"
+                },
+                {
+                    "family": "Hornik",
+                    "given": "Kurt"
+                },
+                {
+                    "family": "Kleiber",
+                    "given": "Christian"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "Zeileis2002",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002
+                    ]
+                ]
+            },
+            "page": "1-38",
+            "title": "strucchange: An R package for testing for structural change in linear regression models",
+            "title-short": "strucchange",
+            "type": "article-journal",
+            "volume": "7"
+        },
+        {
+            "DOI": "10.1093/biomet/65.2.243",
+            "author": [
+                {
+                    "family": "Cobb",
+                    "given": "George W."
+                }
+            ],
+            "container-title": "Biometrika",
+            "id": "Cobb1978",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        1978
+                    ]
+                ]
+            },
+            "page": "243-251",
+            "title": "The problem of the Nile: Conditional solution to a changepoint problem",
+            "title-short": "The problem of the Nile",
+            "type": "article-journal",
+            "volume": "65"
+        },
+        {
+            "DOI": "https://doi.org/10.1007/s10452-007-9101-7",
+            "author": [
+                {
+                    "family": "Winkelmann",
+                    "given": "Carola"
+                },
+                {
+                    "family": "Petzoldt",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Koop",
+                    "given": "Jochen HE"
+                },
+                {
+                    "family": "Matthaei",
+                    "given": "Christoph D"
+                },
+                {
+                    "family": "Benndorf",
+                    "given": "Jürgen"
+                }
+            ],
+            "container-title": "Aquatic ecology",
+            "id": "Winkelmann2008",
+            "issued": {
+                "date-parts": [
+                    [
+                        2008
+                    ]
+                ]
+            },
+            "page": "483-493",
+            "title": "Benthivorous fish reduce stream invertebrate drift in a large-scale field experiment",
+            "type": "article-journal",
+            "volume": "42"
+        },
+        {
+            "DOI": "https://doi.org/10.1111/j.1365-2427.2010.02543.x",
+            "author": [
+                {
+                    "family": "Winkelmann",
+                    "given": "Carola"
+                },
+                {
+                    "family": "Hellmann",
+                    "given": "Claudia"
+                },
+                {
+                    "family": "Worischka",
+                    "given": "Susanne"
+                },
+                {
+                    "family": "Petzoldt",
+                    "given": "Thomas"
+                },
+                {
+                    "family": "Benndorf",
+                    "given": "Juergen"
+                }
+            ],
+            "container-title": "Freshwater Biology",
+            "id": "Winkelmann2011",
+            "issue": "6",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "page": "1030-1046",
+            "title": "Fish predation affects the structure of a benthic community",
+            "type": "article-journal",
+            "volume": "56"
+        },
+        {
+            "URL": "https://CRAN.R-project.org/package=vegan",
+            "author": [
+                {
+                    "family": "Oksanen",
+                    "given": "Jari"
+                },
+                {
+                    "family": "Simpson",
+                    "given": "Gavin L."
+                },
+                {
+                    "family": "Blanchet",
+                    "given": "F. Guillaume"
+                },
+                {
+                    "family": "Kindt",
+                    "given": "Roeland"
+                },
+                {
+                    "family": "Legendre",
+                    "given": "Pierre"
+                },
+                {
+                    "family": "Minchin",
+                    "given": "Peter R."
+                },
+                {
+                    "family": "O’Hara",
+                    "given": "R. B."
+                },
+                {
+                    "family": "Solymos",
+                    "given": "Peter"
+                },
+                {
+                    "family": "Stevens",
+                    "given": "M. Henry H."
+                },
+                {
+                    "family": "Szoecs",
+                    "given": "Eduard"
+                },
+                {
+                    "family": "Wagner",
+                    "given": "Helene"
+                },
+                {
+                    "family": "Barbour",
+                    "given": "Matt"
+                },
+                {
+                    "family": "Bedward",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Bolker",
+                    "given": "Ben"
+                },
+                {
+                    "family": "Borcard",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Carvalho",
+                    "given": "Gustavo"
+                },
+                {
+                    "family": "Chirico",
+                    "given": "Michael"
+                },
+                {
+                    "family": "De Caceres",
+                    "given": "Miquel"
+                },
+                {
+                    "family": "Durand",
+                    "given": "Sebastien"
+                },
+                {
+                    "family": "Evangelista",
+                    "given": "Heloisa Beatriz Antoniazi"
+                },
+                {
+                    "family": "FitzJohn",
+                    "given": "Rich"
+                },
+                {
+                    "family": "Friendly",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Furneaux",
+                    "given": "Brendan"
+                },
+                {
+                    "family": "Hannigan",
+                    "given": "Geoffrey"
+                },
+                {
+                    "family": "Hill",
+                    "given": "Mark O."
+                },
+                {
+                    "family": "Lahti",
+                    "given": "Leo"
+                },
+                {
+                    "family": "McGlinn",
+                    "given": "Dan"
+                },
+                {
+                    "family": "Ouellette",
+                    "given": "Marie-Helene"
+                },
+                {
+                    "family": "Ribeiro Cunha",
+                    "given": "Eduardo"
+                },
+                {
+                    "family": "Smith",
+                    "given": "Tyler"
+                },
+                {
+                    "family": "Stier",
+                    "given": "Adrian"
+                },
+                {
+                    "family": "Ter Braak",
+                    "given": "Cajo J. F."
+                },
+                {
+                    "family": "Weedon",
+                    "given": "James"
+                }
+            ],
+            "id": "Oksanen2024",
+            "issued": {
+                "date-parts": [
+                    [
+                        2024
+                    ]
+                ]
+            },
+            "note": "R package version 2.6-8",
+            "title": "Vegan: Community ecology package",
+            "title-short": "Vegan",
+            "type": "book"
+        }
+    ],
+    "project_biblios": [
+        "bib.bib"
+    ]
+}

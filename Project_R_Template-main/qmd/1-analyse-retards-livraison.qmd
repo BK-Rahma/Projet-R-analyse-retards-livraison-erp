@@ -1,0 +1,745 @@
+---
+title: "Analyse des Retards de Livraison dans un Système ERP"
+date: '2025-12-30'
+webr:
+  packages: ['tidyverse', 'ggplot2', 'dplyr', 'lubridate', 'tidyr']
+filters:
+  - webr
+---
+
+
+# Introduction
+
+Cette analyse vise à étudier les retards de livraison dans un système ERP à partir des dates prévues et réelles. Après un nettoyage rigoureux des données, plusieurs indicateurs clés ont été calculés, notamment le retard en jours, le taux de respect des délais et des alertes logistiques. L'analyse a été menée globalement puis par client, produit et site, afin d'identifier les principales sources de dysfonctionnement et d'aider à la prise de décision.
+
+Les objectifs de cette étude sont :
+
+* Identifier les retards de livraison et quantifier leur ampleur
+* Calculer des indicateurs de performance (taux de respect des délais, délais moyens)
+* Analyser les retards par différentes dimensions (client, produit, site)
+* Détecter les tendances temporelles dans les retards
+* Fournir des alertes logistiques pour la gestion opérationnelle
+
+L'analyse est réalisée avec le logiciel **R** pour le calcul statistique et la visualisation [@RCore].
+
+# Matériel et Méthodes
+
+## Données
+
+Les données proviennent d'un système ERP et contiennent les informations suivantes :
+
+* Dates d'introduction et de livraison
+* Dates prévues (CHD - Date prévue) et réelles (CDD - Date réelle)
+* Informations sur les clients, produits et sites
+* Dates de création des commandes
+
+Le fichier source est `Colisageautomatique.csv` avec un séparateur point-virgule.
+
+## Méthodes statistiques
+
+L'analyse comprend :
+
+* **Nettoyage des données** : suppression des colonnes vides, élimination des doublons, conversion des dates
+* **Calcul des indicateurs** : retard en jours, catégorisation des retards, alertes logistiques
+* **Analyses descriptives** : statistiques globales et par dimension
+* **Visualisations** : graphiques de répartition, histogrammes, analyses temporelles
+
+# Analyse des Données
+
+## Importation et préparation des données
+
+### Importation du fichier CSV
+
+```{webr-r}
+# Importation du fichier CSV depuis GitHub
+colis_df <- read.csv(
+  "https://raw.githubusercontent.com/BK-Rahma/Projet-R-analyse-retards-livraison-erp/main/Colisageautomatique.csv",
+  sep = ";",
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  fill = TRUE,
+  quote = ""
+)
+
+# Aperçu rapide
+head(colis_df)
+```
+
+**Interprétation de l'importation :**
+
+L'importation des données depuis le fichier CSV constitue la première étape de l'analyse. L'aperçu initial permet de vérifier la structure des données, le nombre de colonnes, les types de variables et d'identifier d'éventuels problèmes de format. Cette étape est cruciale pour s'assurer que toutes les colonnes nécessaires à l'analyse sont présentes et correctement formatées.
+
+### Nettoyage des données
+
+Le nettoyage comprend plusieurs étapes :
+
+1. **Suppression des colonnes entièrement vides** (NA ou chaînes vides)
+2. **Suppression des doublons** (lignes identiques)
+3. **Conversion des colonnes de dates** au format Date
+
+```{webr-r}
+# Supprimer uniquement les colonnes entièrement vides (NA ou chaînes vides)
+cols_all_na <- sapply(colis_df, function(x) all(is.na(x) | x == ""))
+colis_df_clean <- colis_df[, !cols_all_na]
+
+# Supprimer les doublons (lignes identiques)
+colis_df_clean <- unique(colis_df_clean)
+
+nb_doublons <- sum(duplicated(colis_df_clean))
+cat("Nombre de doublons restants :", nb_doublons, "\n")
+```
+
+**Interprétation du nettoyage :**
+
+Le nettoyage des données est essentiel pour garantir la qualité de l'analyse. La suppression des colonnes entièrement vides élimine les variables non informatives qui pourraient biaiser les résultats. L'élimination des doublons évite le comptage multiple des mêmes commandes, ce qui pourrait fausser les statistiques. Un nombre élevé de doublons supprimés pourrait indiquer des problèmes dans le processus de collecte ou d'importation des données.
+
+### Conversion des dates
+
+```{webr-r} 
+# Fonction utilitaire de conversion en date (format jour/mois/année)
+convert_to_date <- function(df, colname) {
+  if (colname %in% names(df)) {
+    df[[colname]] <- as.Date(df[[colname]], format = "%d/%m/%Y")
+  }
+  return(df)
+}
+
+# Liste des colonnes de dates à convertir 
+cols_dates <- c(
+  "date_introduction",
+  "date_livraison",
+  "chd..date.prévue.",
+  "cdd..date.réelle."
+)
+
+for (cn in cols_dates) {
+  colis_df_clean <- convert_to_date(colis_df_clean, cn)
+}
+
+# Vérification du format
+str(colis_df_clean[, cols_dates])
+head(colis_df_clean[, cols_dates])
+```
+
+**Interprétation de la conversion des dates :**
+
+La conversion des colonnes de dates au format Date de R est fondamentale pour effectuer des calculs temporels précis. Le format "%d/%m/%Y" correspond au format jour/mois/année utilisé dans les données. La vérification du format permet de s'assurer que toutes les dates ont été correctement converties et qu'aucune erreur de format n'a été introduite. Des dates invalides (NA) peuvent indiquer des problèmes dans les données sources.
+
+## Calcul des indicateurs de retard
+
+### Calcul du retard en jours
+
+Le retard est calculé comme la différence entre la date réelle (CDD) et la date prévue (CHD), en jours.
+
+```{webr-r}
+# 1) Création de la colonne numeric 'retard' (différence entre cdd et chd, en jours)
+if ("chd..date.prévue." %in% names(colis_df_clean) & "cdd..date.réelle." %in% names(colis_df_clean)) {
+  colis_df_clean$retard <- as.numeric(colis_df_clean$cdd..date.réelle. - colis_df_clean$chd..date.prévue.)
+} else {
+  # Si les noms sont différents, on affiche les noms disponibles pour ajuster ensuite
+  print(names(colis_df_clean))
+}
+
+# 2) Colonne binaire est_en_retard
+colis_df_clean$est_en_retard <- ifelse(!is.na(colis_df_clean$retard) & colis_df_clean$retard > 0, TRUE, FALSE)
+```
+
+**Interprétation du calcul du retard :**
+
+Le calcul du retard en jours (différence entre date réelle et date prévue) est l'indicateur central de l'analyse. Une valeur positive indique un retard, une valeur négative une avance, et zéro une livraison exactement à la date prévue. La colonne binaire `est_en_retard` permet une analyse rapide de la proportion de commandes en retard. Cet indicateur est essentiel pour quantifier l'ampleur globale du problème de respect des délais.
+
+### Catégorisation du retard
+
+Les retards sont catégorisés en fonction de leur durée :
+
+* **Pas de retard** : retard ≤ 0 jours
+* **Léger** : retard entre 1 et 3 jours
+* **Moyen** : retard entre 4 et 7 jours
+* **Important** : retard > 7 jours
+
+```{webr-r}
+# 3) Catégorisation du retard
+categoriser_retard <- function(jours) {
+  if (is.na(jours)) {
+    return(NA_character_)
+  } else if (jours <= 0) {
+    return("Pas de retard")
+  } else if (jours <= 3) {
+    return("Léger")
+  } else if (jours <= 7) {
+    return("Moyen")
+  } else {
+    return("Important")
+  }
+}
+
+colis_df_clean$type_retard <- vapply(colis_df_clean$retard, categoriser_retard, character(1))
+
+# 4) Aperçu des colonnes clés
+print(head(colis_df_clean[, c(
+  "date_introduction",
+  "date_livraison",
+  "chd..date.prévue.",
+  "cdd..date.réelle.",
+  "retard",
+  "est_en_retard",
+  "type_retard"
+)]))
+```
+
+**Interprétation de la catégorisation :**
+
+La catégorisation des retards en quatre niveaux (Pas de retard, Léger, Moyen, Important) permet une analyse plus nuancée que la simple distinction binaire. Cette classification facilite la priorisation des actions : les retards importants (> 7 jours) nécessitent une attention immédiate, tandis que les retards légers (1-3 jours) peuvent être gérés de manière plus standard. Cette catégorisation aide également à identifier les patterns dans la distribution des retards et à adapter les stratégies de gestion selon la gravité.
+
+### Système d'alertes logistiques
+
+Un système d'alertes permet de classer chaque commande selon son statut :
+
+* **Livré à temps** : livré avant ou à la date prévue
+* **Retard confirmé** : livré après la date prévue
+* **En retard non livré** : non livré et date prévue dépassée
+* **Livraison prévue** : non livré mais date prévue non encore atteinte
+
+```{webr-r}
+# 5) Logique d'alerte avancée
+
+# Date du jour (système R)
+aujourdhui <- Sys.Date()
+
+# Alerte simple: cdd > chd
+colis_df_clean$alerte_retard_reel <- ifelse(
+  !is.na(colis_df_clean$cdd..date.réelle.) &
+    !is.na(colis_df_clean$chd..date.prévue.) &
+    colis_df_clean$cdd..date.réelle. > colis_df_clean$chd..date.prévue.,
+  TRUE,
+  FALSE
+)
+
+# Alerte détaillée (livré à temps, retard confirmé, en retard non livré, livraison prévue)
+detecter_alerte <- function(date_prevue, date_reelle, today) {
+  if (!is.na(date_reelle)) {
+    if (date_reelle > date_prevue) {
+      return("Retard confirmé")
+    } else {
+      return("Livré à temps")
+    }
+  } else {
+    if (date_prevue < today) {
+      return("En retard non livré")
+    } else {
+      return("Livraison prévue")
+    }
+  }
+}
+
+colis_df_clean$alerte_retard <- mapply(
+  detecter_alerte,
+  colis_df_clean$chd..date.prévue.,
+  colis_df_clean$cdd..date.réelle.,
+  MoreArgs = list(today = aujourdhui)
+)
+
+# Nombre de lignes par type d'alerte
+print(table(colis_df_clean$alerte_retard, useNA = "ifany"))
+
+# Calcul nb_jours_retard 
+calculer_retard <- function(date_prevue, date_reelle, today) {
+  if (!is.na(date_reelle)) {
+    return(as.numeric(date_reelle - date_prevue))
+  } else if (date_prevue < today) {
+    return(as.numeric(today - date_prevue))
+  } else {
+    return(0)
+  }
+}
+
+colis_df_clean$nb_jours_retard <- mapply(
+  calculer_retard,
+  colis_df_clean$chd..date.prévue.,
+  colis_df_clean$cdd..date.réelle.,
+  MoreArgs = list(today = aujourdhui)
+)
+
+# Aperçu final des colonnes de retard
+print(head(colis_df_clean[, c(
+  "chd..date.prévue.",
+  "cdd..date.réelle.",
+  "retard",
+  "est_en_retard",
+  "type_retard",
+  "alerte_retard",
+  "nb_jours_retard"
+)]))
+```
+
+**Interprétation du système d'alertes :**
+
+Le système d'alertes logistiques fournit une classification opérationnelle de chaque commande selon son statut actuel. Les quatre catégories (Livré à temps, Retard confirmé, En retard non livré, Livraison prévue) permettent une gestion proactive des commandes. Les commandes "En retard non livré" nécessitent une intervention immédiate, tandis que les "Livraisons prévues" peuvent être surveillées. Le calcul du nombre de jours de retard prend en compte à la fois les commandes livrées et non livrées, fournissant une mesure complète de l'impact opérationnel.
+
+## Visualisations globales
+
+### Répartition des retards
+
+```{webr-r}
+# Installer/charger ggplot2 
+if (!"ggplot2" %in% rownames(installed.packages())) {
+  install.packages("ggplot2")
+}
+library(ggplot2)
+
+# Plot binaire est_en_retard
+p1 <- ggplot(colis_df_clean, aes(x = est_en_retard)) +
+  geom_bar(fill = "#66c2a5") +
+  scale_x_discrete(labels = c("FALSE" = "Non", "TRUE" = "Oui")) +
+  labs(
+    title = "Répartition des retards",
+    x = "Est en retard",
+    y = "Nombre de commandes"
+  ) +
+  theme_minimal()
+
+print(p1)
+```
+
+**Interprétation de la répartition des retards :**
+
+Ce graphique en barres montre la proportion globale de commandes en retard versus celles livrées à temps. La comparaison des hauteurs des barres permet d'évaluer rapidement l'ampleur du problème de respect des délais. Un déséquilibre important en faveur des retards indique un dysfonctionnement systémique nécessitant des actions correctives globales. Ce graphique constitue un indicateur de performance clé (KPI) pour le suivi de la qualité de service.
+
+### Statut des livraisons
+
+```{webr-r}
+# Visualisation du statut des livraisons (alerte_retard)
+p3 <- ggplot(colis_df_clean, aes(x = alerte_retard)) +
+  geom_bar(fill = "#fc8d62") +
+  labs(
+    title = "Statut des livraisons",
+    x = "Alerte",
+    y = "Nombre de commandes"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+
+print(p3)
+```
+
+**Interprétation du statut des livraisons :**
+
+Cette visualisation détaillée du statut des livraisons offre une vue complète de l'état opérationnel. La distinction entre "Livré à temps", "Retard confirmé", "En retard non livré" et "Livraison prévue" permet d'identifier les différents types de situations à gérer. Les commandes "En retard non livré" représentent un risque immédiat pour la satisfaction client et nécessitent un suivi prioritaire. Cette répartition aide à allouer les ressources de manière optimale selon l'urgence de chaque situation.
+
+## Analyses globales
+
+### Délais moyens et taux de respect des délais
+
+```{webr-r}
+library(dplyr)
+library(ggplot2)
+
+# Vérifier les colonnes disponibles liées aux dates
+print(names(colis_df_clean)[grepl("date", names(colis_df_clean), ignore.case = TRUE)])
+
+# Aperçu rapide des colonnes clés
+print(head(colis_df_clean[, c("date_creation_commande", "chd..date.prévue.", "cdd..date.réelle.", "client", "produit_id", "site_id")], 10))
+```
+
+**Interprétation de la vérification des colonnes :**
+
+Cette étape de vérification permet de s'assurer que toutes les colonnes nécessaires aux analyses ultérieures sont présentes et correctement formatées. L'identification des colonnes de dates permet de valider que les conversions ont été effectuées correctement. L'aperçu des colonnes clés (dates, client, produit, site) confirme la disponibilité des dimensions d'analyse nécessaires pour les analyses par segment.
+
+```{webr-r}
+# 1) S'assurer que les dates sont bien au bon format Date
+# On suppose le format jour/mois/année pour date_creation_commande
+if (!inherits(colis_df_clean$date_creation_commande, "Date")) {
+  colis_df_clean$date_creation_commande <- as.Date(colis_df_clean$date_creation_commande, format = "%d/%m/%Y")
+}
+
+# Vérif rapide
+print(summary(colis_df_clean[, c("date_creation_commande", "chd..date.prévue.", "cdd..date.réelle.")]))
+
+# 2) Délai moyen entre création commande et date prévue / réelle (en jours)
+colis_df_clean <- colis_df_clean %>%
+  mutate(
+    delai_creation_chd = as.numeric(chd..date.prévue. - date_creation_commande),
+    delai_creation_cdd = as.numeric(cdd..date.réelle. - date_creation_commande)
+  )
+
+# Calcul des moyennes (en ignorant les NA)
+res_delais_globaux <- colis_df_clean %>%
+  summarise(
+    delai_moyen_creation_chd = mean(delai_creation_chd, na.rm = TRUE),
+    delai_moyen_creation_cdd = mean(delai_creation_cdd, na.rm = TRUE)
+  )
+
+print(res_delais_globaux)
+```
+
+**Interprétation des délais moyens :**
+
+Les délais moyens entre la création de la commande et les dates prévues/réelles fournissent des indicateurs de performance du processus opérationnel. Un délai moyen élevé entre création et date prévue peut indiquer des problèmes de planification ou de capacité. La différence entre le délai moyen jusqu'à la date prévue et jusqu'à la date réelle révèle l'ampleur des retards moyens. Ces métriques permettent d'évaluer l'efficacité globale du processus de livraison et d'identifier les goulots d'étranglement.
+
+### Taux de respect des délais
+
+```{webr-r}
+# 3) Taux de respect des délais : part des ordres livrés à temps vs en retard (cdd > chd)
+colis_df_clean <- colis_df_clean %>%
+  mutate(
+    en_retard = case_when(
+      !is.na(cdd..date.réelle.) & !is.na(chd..date.prévue.) & cdd..date.réelle. > chd..date.prévue. ~ "En retard",
+      !is.na(cdd..date.réelle.) & !is.na(chd..date.prévue.) & cdd..date.réelle. <= chd..date.prévue. ~ "À l'heure",
+      TRUE ~ "Non livré / Inconnu"
+    )
+  )
+
+taux_respect_global <- colis_df_clean %>%
+  count(en_retard) %>%
+  mutate(pourcentage = n / sum(n) * 100)
+
+print(taux_respect_global)
+```
+
+**Interprétation du taux de respect des délais :**
+
+Le taux de respect des délais est un indicateur clé de performance (KPI) essentiel pour évaluer la qualité de service. Un taux élevé de commandes "À l'heure" indique une bonne performance opérationnelle, tandis qu'un taux élevé de retards signale des dysfonctionnements nécessitant une intervention. La catégorie "Non livré / Inconnu" peut indiquer des problèmes de suivi ou de données incomplètes. Ce taux permet de fixer des objectifs de performance et de mesurer l'efficacité des actions correctives.
+
+### Histogramme des retards/avances
+
+```{webr-r}
+# 4) Histogrammes de retard/avance en jours (cdd - chd)
+colis_df_clean <- colis_df_clean %>%
+  mutate(delta_jours = as.numeric(cdd..date.réelle. - chd..date.prévue.))
+
+p_hist_global <- ggplot(colis_df_clean, aes(x = delta_jours)) +
+  geom_histogram(binwidth = 1, fill = "#1f78b4", color = "blue") +
+  labs(
+    title = "Histogramme du retard / avance (en jours)",
+    x = "Retard (+) / Avance (-) en jours",
+    y = "Nombre de commandes"
+  ) +
+  theme_minimal()
+
+print(p_hist_global)
+```
+
+**Interprétation de l'histogramme :**
+
+L'histogramme montre la distribution complète des retards et avances en jours. La forme de la distribution révèle des patterns importants : une distribution centrée autour de zéro avec une queue droite (retards positifs) indique que la plupart des livraisons sont à temps, mais avec quelques retards importants. Une distribution décalée vers les valeurs positives suggère un problème systémique de retards. Les valeurs négatives (avances) peuvent indiquer une planification trop conservatrice. Ce graphique permet d'identifier les valeurs les plus fréquentes et les cas extrêmes.
+
+### Boxplot du retard
+
+Le boxplot permet d'analyser la distribution statistique des retards, notamment les quartiles, la médiane et les valeurs aberrantes.
+
+```{webr-r}
+# Boxplot du retard (très important en statistique)
+p_boxplot <- ggplot(colis_df_clean, aes(y = delta_jours)) +
+  geom_boxplot(fill = "#80b1d3") +
+  labs(
+    title = "Distribution du retard (boxplot)",
+    y = "Retard / avance (jours)"
+  ) +
+  theme_minimal()
+
+print(p_boxplot)
+```
+
+**Interprétation du boxplot :**
+
+Le boxplot révèle la distribution statistique des retards de livraison. La boîte centrale représente l'intervalle interquartile (IQR), contenant 50% des données. La ligne médiane indique la valeur médiane des retards. Les moustaches s'étendent jusqu'aux valeurs extrêmes (généralement 1,5 × IQR au-delà des quartiles). Les points au-delà des moustaches représentent des valeurs aberrantes (outliers) qui nécessitent une attention particulière. Ce graphique permet d'identifier rapidement la symétrie de la distribution, la présence de valeurs extrêmes et la dispersion globale des retards.
+
+## Analyses par dimension
+
+### Analyse par client
+
+```{webr-r}
+# 5) Comparaison par client
+retard_client <- colis_df_clean %>%
+  group_by(client) %>%
+  summarise(
+    delai_moyen = mean(delta_jours, na.rm = TRUE),
+    taux_retard = mean(en_retard == "En retard", na.rm = TRUE),
+    nb_commandes = n()
+  ) %>%
+  arrange(desc(nb_commandes))
+
+print(head(retard_client, 10))
+
+p_client <- ggplot(retard_client %>% filter(nb_commandes > 10), aes(x = reorder(client, delai_moyen), y = delai_moyen)) +
+  geom_col(fill = "#33a02c") +
+  coord_flip() +
+  labs(
+    title = "Délai moyen (retard/avance) par client",
+    x = "Client",
+    y = "Délai moyen en jours"
+  ) +
+  theme_minimal()
+
+print(p_client)
+```
+
+**Interprétation de l'analyse par client :**
+
+L'analyse par client permet d'identifier les clients pour lesquels les retards sont les plus fréquents ou les plus importants. Cette segmentation est cruciale pour la gestion de la relation client et la priorisation des actions. Les clients avec des retards moyens élevés peuvent nécessiter une attention particulière, des processus dédiés ou une révision des engagements de délais. Cette analyse aide également à identifier si certains clients ont des besoins spécifiques (produits complexes, volumes importants) qui impactent les délais de livraison.
+
+### Analyse par produit
+
+```{webr-r}
+# 6) Comparaison par produit
+retard_produit <- colis_df_clean %>%
+  group_by(produit_id) %>%
+  summarise(
+    delai_moyen = mean(delta_jours, na.rm = TRUE),
+    taux_retard = mean(en_retard == "En retard", na.rm = TRUE),
+    nb_commandes = n()
+  ) %>%
+  arrange(desc(nb_commandes))
+
+print(head(retard_produit, 10))
+
+p_produit <- ggplot(retard_produit %>% filter(nb_commandes > 20), aes(x = reorder(as.factor(produit_id), delai_moyen), y = delai_moyen)) +
+  geom_col(fill = "#fb9a99") +
+  coord_flip() +
+  labs(
+    title = "Délai moyen (retard/avance) par produit",
+    x = "Produit",
+    y = "Délai moyen en jours"
+  ) +
+  theme_minimal()
+
+print(p_produit)
+```
+
+**Interprétation de l'analyse par produit :**
+
+L'analyse par produit révèle si certains produits sont systématiquement associés à des retards plus importants. Cette information est précieuse pour identifier les produits problématiques (complexité de fabrication, approvisionnement difficile, processus spécifiques). Les produits avec des retards moyens élevés peuvent nécessiter une révision des processus de production, des délais de planification ou des stratégies d'approvisionnement. Cette analyse permet également d'identifier les produits performants qui pourraient servir de référence pour améliorer les autres.
+
+### Analyse par site
+
+```{webr-r}
+# 7) Comparaison par site
+retard_site <- colis_df_clean %>%
+  group_by(site_id) %>%
+  summarise(
+    delai_moyen = mean(delta_jours, na.rm = TRUE),
+    taux_retard = mean(en_retard == "En retard", na.rm = TRUE),
+    nb_commandes = n()
+  ) %>%
+  arrange(desc(nb_commandes))
+
+print(head(retard_site, 10))
+
+p_site <- ggplot(retard_site %>% filter(nb_commandes > 20), aes(x = reorder(as.factor(site_id), delai_moyen), y = delai_moyen)) +
+  geom_col(fill = "#e31a1c") +
+  coord_flip() +
+  labs(
+    title = "Délai moyen (retard/avance) par site",
+    x = "Site",
+    y = "Délai moyen en jours"
+  ) +
+  theme_minimal()
+
+print(p_site)
+```
+
+**Interprétation de l'analyse par site :**
+
+L'analyse par site permet d'identifier les sites de production ou de distribution qui présentent des performances différentes en termes de respect des délais. Cette segmentation est essentielle pour localiser les problèmes opérationnels et allouer les ressources de manière ciblée. Les sites avec des retards moyens élevés peuvent nécessiter une analyse approfondie de leurs processus, de leur capacité ou de leur organisation. Cette analyse permet également de partager les bonnes pratiques des sites performants vers les sites en difficulté.
+
+### Heatmap Client × Site
+
+La heatmap permet de visualiser simultanément les retards moyens par combinaison client-site, identifiant les interactions problématiques.
+
+```{webr-r}
+# Heatmap Client × Site
+library(tidyr)
+
+heat_data <- colis_df_clean %>%
+  group_by(client, site_id) %>%
+  summarise(retard_moyen = mean(delta_jours, na.rm = TRUE), .groups = "drop") %>%
+  drop_na()
+
+p_heatmap <- ggplot(heat_data, aes(x = client, y = as.factor(site_id), fill = retard_moyen)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "green", mid = "white", high = "red", midpoint = 0) +
+  labs(
+    title = "Heatmap du retard moyen par client et site",
+    x = "Client",
+    y = "Site",
+    fill = "Retard moyen\n(jours)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(p_heatmap)
+```
+
+**Interprétation de la heatmap :**
+
+La heatmap Client × Site offre une vue d'ensemble des interactions entre clients et sites en termes de performance de livraison. Les couleurs vertes indiquent des retards négatifs (livraisons en avance), le blanc représente des retards proches de zéro, et le rouge signale des retards importants. Cette visualisation permet d'identifier rapidement les combinaisons problématiques (client-site) qui nécessitent une intervention prioritaire. Les zones rouges indiquent des dysfonctionnements spécifiques à certaines combinaisons, suggérant des problèmes opérationnels localisés plutôt que systémiques.
+
+## Analyses temporelles
+
+### Analyse par mois
+
+```{webr-r}
+library(lubridate)
+
+# On suppose que colis_df_clean est déjà en mémoire et contient les colonnes de dates
+# Conversion minimale des dates utiles si besoin
+possible_date_cols <- c("date_creation_commande", "chd..date.prévue.", "cdd..date.réelle.")
+for (col in possible_date_cols) {
+  if (col %in% names(colis_df_clean)) {
+    colis_df_clean[[col]] <- as.Date(colis_df_clean[[col]])
+  }
+}
+
+# On choisit la colonne de référence pour le mois
+ref_date_col <- if ("chd..date.prévue." %in% names(colis_df_clean)) "chd..date.prévue." else "date_creation_commande"
+
+# Création de la colonne mois (1 à 12)
+colis_df_clean <- colis_df_clean %>%
+  mutate(
+    mois = month(.data[[ref_date_col]]),
+    annee = year(.data[[ref_date_col]])
+  )
+
+# Regrouper par mois et alerte_retard
+if (!"alerte_retard" %in% names(colis_df_clean)) {
+  # Si la colonne n'existe pas, on crée un exemple binaire à partir du retard réel (cdd > chd)
+  if (all(c("chd..date.prévue.", "cdd..date.réelle.") %in% names(colis_df_clean))) {
+    colis_df_clean <- colis_df_clean %>%
+      mutate(
+        alerte_retard = ifelse(`cdd..date.réelle.` > `chd..date.prévue.`, "Retard confirmé", "Livré à temps")
+      )
+  }
+}
+
+# Table agrégée
+retard_mois <- colis_df_clean %>%
+  filter(!is.na(mois), !is.na(alerte_retard)) %>%
+  group_by(mois, alerte_retard) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  group_by(mois) %>%
+  mutate(pourcentage = 100 * n / sum(n)) %>%
+  ungroup()
+
+print(head(retard_mois))
+```
+
+**Interprétation de l'analyse par mois :**
+
+L'analyse par mois permet d'identifier les variations saisonnières ou temporelles dans les retards de livraison. Certains mois peuvent présenter des taux de retard plus élevés en raison de facteurs saisonniers (périodes de forte demande, congés, événements exceptionnels). Cette analyse temporelle aide à anticiper les périodes à risque et à préparer des mesures préventives. La répartition par mois et par statut d'alerte permet également d'évaluer l'évolution de la performance au fil du temps et de mesurer l'impact des actions correctives.
+
+### Visualisations temporelles
+
+```{webr-r}
+# Graphique 1 : histogramme empilé (barplot) par mois en valeurs absolues
+plot_hist_counts <- ggplot(retard_mois, aes(x = factor(mois), y = n, fill = alerte_retard)) +
+  geom_col(position = "stack") +
+  labs(
+    title = "Nombre de commandes Livrées à temps vs Retard confirmé par mois",
+    x = "Mois",
+    y = "Nombre de commandes",
+    fill = "Statut"
+  ) +
+  theme_minimal()
+
+print(plot_hist_counts)
+
+# Graphique 2 : histogramme en pourcentage par mois
+plot_hist_percent <- ggplot(retard_mois, aes(x = factor(mois), y = pourcentage, fill = alerte_retard)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  labs(
+    title = "Répartition en % Livré à temps vs Retard confirmé par mois",
+    x = "Mois",
+    y = "Pourcentage",
+    fill = "Statut"
+  ) +
+  theme_minimal()
+
+print(plot_hist_percent)
+```
+
+**Interprétation des visualisations temporelles :**
+
+Le graphique en valeurs absolues montre le volume total de commandes par mois selon leur statut, permettant d'identifier les mois avec le plus grand nombre de retards. Le graphique en pourcentage révèle la proportion relative de retards par mois, indépendamment du volume, ce qui permet d'identifier les mois où la performance relative était la meilleure ou la pire. Ces deux visualisations complémentaires offrent une vue complète de l'évolution temporelle : le premier montre l'impact absolu, le second la qualité relative de la performance.
+
+### Évolution temporelle des retards
+
+L'analyse de l'évolution mensuelle permet d'identifier les tendances et les périodes critiques.
+
+```{webr-r}
+# Évolution temporelle des retards
+retard_par_mois <- colis_df_clean %>%
+  mutate(mois = format(chd..date.prévue., "%Y-%m")) %>%
+  group_by(mois) %>%
+  summarise(retard_moyen = mean(delta_jours, na.rm = TRUE), .groups = "drop")
+
+p_evolution <- ggplot(retard_par_mois, aes(x = mois, y = retard_moyen, group = 1)) +
+  geom_line(color = "#1f78b4", size = 1) +
+  geom_point(color = "#1f78b4", size = 2) +
+  labs(
+    title = "Évolution mensuelle du retard moyen",
+    x = "Mois",
+    y = "Retard moyen (jours)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+print(p_evolution)
+```
+
+**Interprétation de l'évolution temporelle :**
+
+Le graphique d'évolution mensuelle montre la tendance du retard moyen au fil du temps. Une courbe ascendante indique une dégradation de la performance, tandis qu'une courbe descendante suggère une amélioration. Les pics identifient les périodes critiques nécessitant une analyse approfondie (saisonnalité, événements exceptionnels, changements organisationnels). Cette analyse temporelle permet de valider l'efficacité des mesures correctives mises en place et d'anticiper les périodes à risque.
+
+### Analyse détaillée d'un mois (exemple : janvier)
+
+```{webr-r} 
+retard_janvier <- retard_mois %>% filter(mois == 1)
+print(retard_janvier)
+
+plot_pie_janvier <- ggplot(retard_janvier, aes(x = "", y = n, fill = alerte_retard)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  labs(
+    title = "Répartition Livré à temps vs Retard confirmé - Janvier",
+    x = NULL,
+    y = NULL,
+    fill = "Statut"
+  ) +
+  theme_void()
+
+print(plot_pie_janvier)
+```
+
+**Interprétation de l'analyse détaillée d'un mois :**
+
+L'analyse détaillée d'un mois spécifique (exemple : janvier) permet une compréhension approfondie de la performance sur une période donnée. Le graphique en camembert offre une visualisation claire de la répartition entre les commandes livrées à temps et celles en retard. Cette analyse granulaire peut être étendue à d'autres mois pour identifier les périodes problématiques et comprendre les facteurs contextuels (saisonnalité, événements, changements organisationnels) qui influencent les performances. Cette approche permet de passer d'une vue globale à une analyse ciblée pour des actions correctives spécifiques.
+
+# Discussion et Conclusion
+
+## Résultats principaux
+
+L'analyse des retards de livraison a permis d'identifier :
+
+* Le taux global de respect des délais
+* Les clients, produits et sites les plus problématiques
+* Les tendances temporelles dans les retards
+* Les catégories de retards (léger, moyen, important)
+
+## Implications pour la gestion
+
+Les résultats de cette analyse peuvent être utilisés pour :
+
+* Identifier les sources principales de dysfonctionnement
+* Prioriser les actions correctives par client, produit ou site
+* Surveiller l'évolution des retards dans le temps
+* Mettre en place des alertes préventives
+
+## Limitations et perspectives
+
+* Les données analysées correspondent à une période spécifique
+* Des analyses complémentaires pourraient inclure des modèles prédictifs
+* L'intégration avec d'autres systèmes ERP pourrait enrichir l'analyse
+
+# Références
+
