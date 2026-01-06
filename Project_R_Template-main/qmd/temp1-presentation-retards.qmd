@@ -589,9 +589,4 @@ Cette analyse permet de :
 ✅ **Suivre** l'évolution temporelle  
 ✅ **Alerter** sur les situations critiques  
 
-**Prochaines étapes :**
-
-* Actions correctives ciblées
-* Modèles prédictifs
-* Intégration avec d'autres systèmes
-
+---
