@@ -1662,8 +1662,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#introduction",
     "href": "qmd/temp1-presentation-retards.html#introduction",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "",
-    "text": "Cette analyse vise à étudier les retards de livraison dans un système ERP à partir des dates prévues et réelles.\nObjectifs :\n\nIdentifier les retards de livraison et quantifier leur ampleur\nCalculer des indicateurs de performance\nAnalyser les retards par client, produit et site\nDétecter les tendances temporelles",
+    "section": "Introduction",
+    "text": "Introduction\nCette analyse vise à étudier les retards de livraison dans un système ERP à partir des dates prévues et réelles.\nObjectifs :\n\nIdentifier les retards de livraison et quantifier leur ampleur\nCalculer des indicateurs de performance\nAnalyser les retards par client, produit et site\nDétecter les tendances temporelles",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1673,8 +1673,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#importation-des-données",
     "href": "qmd/temp1-presentation-retards.html#importation-des-données",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "2 Importation des données",
-    "text": "2 Importation des données\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Importation des données",
+    "text": "Importation des données\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1684,8 +1684,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#nettoyage-des-données",
     "href": "qmd/temp1-presentation-retards.html#nettoyage-des-données",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "3 Nettoyage des données",
-    "text": "3 Nettoyage des données\nÉtapes de nettoyage :\n\nSuppression des colonnes entièrement vides\nSuppression des doublons\nConversion des dates\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Nettoyage des données",
+    "text": "Nettoyage des données\nÉtapes de nettoyage :\n\nSuppression des colonnes entièrement vides\nSuppression des doublons\nConversion des dates\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1695,8 +1695,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#conversion-des-dates",
     "href": "qmd/temp1-presentation-retards.html#conversion-des-dates",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "4 Conversion des dates",
-    "text": "4 Conversion des dates\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Conversion des dates",
+    "text": "Conversion des dates\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1706,8 +1706,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#calcul-du-retard-en-jours",
     "href": "qmd/temp1-presentation-retards.html#calcul-du-retard-en-jours",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "5 Calcul du retard en jours",
-    "text": "5 Calcul du retard en jours\nLe retard est calculé comme la différence entre la date réelle (CDD) et la date prévue (CHD).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Calcul du retard en jours",
+    "text": "Calcul du retard en jours\nLe retard est calculé comme la différence entre la date réelle (CDD) et la date prévue (CHD).\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1717,8 +1717,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#catégorisation-des-retards",
     "href": "qmd/temp1-presentation-retards.html#catégorisation-des-retards",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "6 Catégorisation des retards",
-    "text": "6 Catégorisation des retards\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Catégorisation des retards",
+    "text": "Catégorisation des retards\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1728,8 +1728,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#visualisation-répartition-des-retards",
     "href": "qmd/temp1-presentation-retards.html#visualisation-répartition-des-retards",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "7 Visualisation : Répartition des retards",
-    "text": "7 Visualisation : Répartition des retards\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Visualisation : Répartition des retards",
+    "text": "Visualisation : Répartition des retards\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1739,8 +1739,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#système-dalertes-logistiques",
     "href": "qmd/temp1-presentation-retards.html#système-dalertes-logistiques",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "8 Système d’alertes logistiques",
-    "text": "8 Système d’alertes logistiques\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Système d’alertes logistiques",
+    "text": "Système d’alertes logistiques\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1750,8 +1750,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#visualisation-statut-des-livraisons",
     "href": "qmd/temp1-presentation-retards.html#visualisation-statut-des-livraisons",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "9 Visualisation : Statut des livraisons",
-    "text": "9 Visualisation : Statut des livraisons\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Visualisation : Statut des livraisons",
+    "text": "Visualisation : Statut des livraisons\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1761,8 +1761,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#analyses-globales-délais-moyens",
     "href": "qmd/temp1-presentation-retards.html#analyses-globales-délais-moyens",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "10 Analyses globales : Délais moyens",
-    "text": "10 Analyses globales : Délais moyens\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Analyses globales : Délais moyens",
+    "text": "Analyses globales : Délais moyens\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1772,8 +1772,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#taux-de-respect-des-délais",
     "href": "qmd/temp1-presentation-retards.html#taux-de-respect-des-délais",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "11 Taux de respect des délais",
-    "text": "11 Taux de respect des délais\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Taux de respect des délais",
+    "text": "Taux de respect des délais\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1783,8 +1783,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#histogramme-des-retardsavances",
     "href": "qmd/temp1-presentation-retards.html#histogramme-des-retardsavances",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "12 Histogramme des retards/avances",
-    "text": "12 Histogramme des retards/avances\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Histogramme des retards/avances",
+    "text": "Histogramme des retards/avances\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1794,8 +1794,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#boxplot-du-retard",
     "href": "qmd/temp1-presentation-retards.html#boxplot-du-retard",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "13 Boxplot du retard",
-    "text": "13 Boxplot du retard\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterprétation : Le boxplot révèle la distribution statistique des retards. La boîte centrale (IQR) contient 50% des données, la médiane indique le retard typique, et les points extrêmes identifient les valeurs aberrantes nécessitant une attention.",
+    "section": "Boxplot du retard",
+    "text": "Boxplot du retard\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterprétation : Le boxplot révèle la distribution statistique des retards. La boîte centrale (IQR) contient 50% des données, la médiane indique le retard typique, et les points extrêmes identifient les valeurs aberrantes nécessitant une attention.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1805,8 +1805,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#analyse-par-client",
     "href": "qmd/temp1-presentation-retards.html#analyse-par-client",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "14 Analyse par client",
-    "text": "14 Analyse par client\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Analyse par client",
+    "text": "Analyse par client\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1816,8 +1816,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#analyse-par-produit",
     "href": "qmd/temp1-presentation-retards.html#analyse-par-produit",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "15 Analyse par produit",
-    "text": "15 Analyse par produit\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Analyse par produit",
+    "text": "Analyse par produit\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1827,8 +1827,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#analyse-par-site",
     "href": "qmd/temp1-presentation-retards.html#analyse-par-site",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "16 Analyse par site",
-    "text": "16 Analyse par site\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Analyse par site",
+    "text": "Analyse par site\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1838,8 +1838,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#heatmap-client-site",
     "href": "qmd/temp1-presentation-retards.html#heatmap-client-site",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "17 Heatmap Client × Site",
-    "text": "17 Heatmap Client × Site\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterprétation : La heatmap identifie les combinaisons problématiques client-site. Les zones rouges indiquent des retards importants nécessitant une intervention prioritaire, tandis que les zones vertes montrent de bonnes performances.",
+    "section": "Heatmap Client × Site",
+    "text": "Heatmap Client × Site\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterprétation : La heatmap identifie les combinaisons problématiques client-site. Les zones rouges indiquent des retards importants nécessitant une intervention prioritaire, tandis que les zones vertes montrent de bonnes performances.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1849,8 +1849,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#analyse-temporelle-par-mois",
     "href": "qmd/temp1-presentation-retards.html#analyse-temporelle-par-mois",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "18 Analyse temporelle : Par mois",
-    "text": "18 Analyse temporelle : Par mois\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Analyse temporelle : Par mois",
+    "text": "Analyse temporelle : Par mois\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1860,8 +1860,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#visualisation-temporelle-par-mois",
     "href": "qmd/temp1-presentation-retards.html#visualisation-temporelle-par-mois",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "19 Visualisation temporelle : Par mois",
-    "text": "19 Visualisation temporelle : Par mois\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Visualisation temporelle : Par mois",
+    "text": "Visualisation temporelle : Par mois\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1871,8 +1871,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#visualisation-temporelle-pourcentages",
     "href": "qmd/temp1-presentation-retards.html#visualisation-temporelle-pourcentages",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "20 Visualisation temporelle : Pourcentages",
-    "text": "20 Visualisation temporelle : Pourcentages\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "section": "Visualisation temporelle : Pourcentages",
+    "text": "Visualisation temporelle : Pourcentages\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1882,8 +1882,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#évolution-temporelle-des-retards",
     "href": "qmd/temp1-presentation-retards.html#évolution-temporelle-des-retards",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "21 Évolution temporelle des retards",
-    "text": "21 Évolution temporelle des retards\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterprétation : L’évolution mensuelle montre les tendances temporelles. Une courbe ascendante indique une dégradation, une courbe descendante une amélioration. Les pics identifient les périodes critiques à analyser.",
+    "section": "Évolution temporelle des retards",
+    "text": "Évolution temporelle des retards\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterprétation : L’évolution mensuelle montre les tendances temporelles. Une courbe ascendante indique une dégradation, une courbe descendante une amélioration. Les pics identifient les périodes critiques à analyser.",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1893,8 +1893,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#résultats-principaux",
     "href": "qmd/temp1-presentation-retards.html#résultats-principaux",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "22 Résultats principaux",
-    "text": "22 Résultats principaux\nIndicateurs clés identifiés :\n\nTaux global de respect des délais\nDélais moyens par dimension (client, produit, site)\nTendances temporelles dans les retards\nCatégorisation des retards (léger, moyen, important)\n\nImplications pour la gestion :\n\nIdentification des sources principales de dysfonctionnement\nPriorisation des actions correctives\nSurveillance de l’évolution des retards\nMise en place d’alertes préventives",
+    "section": "Résultats principaux",
+    "text": "Résultats principaux\nIndicateurs clés identifiés :\n\nTaux global de respect des délais\nDélais moyens par dimension (client, produit, site)\nTendances temporelles dans les retards\nCatégorisation des retards (léger, moyen, important)\n\nImplications pour la gestion :\n\nIdentification des sources principales de dysfonctionnement\nPriorisation des actions correctives\nSurveillance de l’évolution des retards\nMise en place d’alertes préventives",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
@@ -1904,8 +1904,8 @@
     "objectID": "qmd/temp1-presentation-retards.html#conclusion",
     "href": "qmd/temp1-presentation-retards.html#conclusion",
     "title": "Analyse des Retards de Livraison - Présentation",
-    "section": "23 Conclusion",
-    "text": "23 Conclusion\nCette analyse permet de :\n✅ Quantifier les retards de livraison\n✅ Identifier les problèmes par dimension\n✅ Suivre l’évolution temporelle\n✅ Alerter sur les situations critiques\nProchaines étapes :\n\nActions correctives ciblées\nModèles prédictifs\nIntégration avec d’autres systèmes",
+    "section": "Conclusion",
+    "text": "Conclusion\nCette analyse permet de :\n✅ Quantifier les retards de livraison\n✅ Identifier les problèmes par dimension\n✅ Suivre l’évolution temporelle\n✅ Alerter sur les situations critiques\nProchaines étapes :\n\nActions correctives ciblées\nModèles prédictifs\nIntégration avec d’autres systèmes",
     "crumbs": [
       "Projects",
       "Analyse des Retards de Livraison - Présentation"
